@@ -1,0 +1,14 @@
+.idea/libraries/*
+.idea
+**/target
+/video/*
+*.iml
+*/*.iml
+*.DS_Store
+
+.project
+.settings
+*/.classpath
+*/.project
+*/.settings
+*/.factorypath
