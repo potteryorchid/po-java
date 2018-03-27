@@ -1,20 +1,22 @@
-package com.po.concurrent;
+package com.po.concurrent.thread;
+
+import com.po.concurrent.common.ControlFlag;
 
 /**
  * Thread 应用
  * Created by ZJ on 27/03/2018.
  */
-public class NumThreadApp {
+public class ThreadOddEvenApp {
 
 
   public static void main(String[] args) {
 
-    ThreadControlFlag threadControlFlag = new ThreadControlFlag();
+    ControlFlag controlFlag = new ControlFlag();
 
     // 线程获得资源执行完后执行 notify() 以唤醒另一个线程，当条件不允许执行时执行 wait() 让出已获得的资源。
-    new EvenNumThread(threadControlFlag).start();
+    new EvenNumThread(controlFlag).start();
     // 线程获得资源执行完后执行 notify() 以唤醒另一个线程，当条件不允许执行时执行 wait() 让出已获得的资源。
-    new OddNumThread(threadControlFlag).start();
+    new OddNumThread(controlFlag).start();
 
   }
 
