@@ -8,7 +8,8 @@ import com.po.concurrent.common.ControlFlag;
  * 1、synchronized 关键字控制线程安全，同时使用 wait() 和 notify() 方法控制线程的继续执行，该方式可以有效避免同步锁的竞争，提高线程效率。当多个线程协调进行工作时建议使用
  * wait() 和 notify()。
  *
- * 2、wait() 和 notify() 必须在 synchronized 作用范围内使用，否则会报异常错误。
+ * 2、wait() 和 notify() 必须在 synchronized 作用范围内使用，否则会报异常错误: Exception in thread "Thread-1"
+ * java.lang.IllegalMonitorStateException.
  *
  * 3、notify() 和  notifyAll() ：当确定只有一个线程需要被唤醒时才可以使用 notify()，其他情况都使用 notifyAll()，表示唤醒其他等待线程。
  *

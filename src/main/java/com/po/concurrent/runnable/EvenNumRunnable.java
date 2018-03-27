@@ -1,4 +1,4 @@
-package com.po.concurrent;
+package com.po.concurrent.runnable;
 
 import com.po.concurrent.common.ControlFlag;
 import java.util.concurrent.locks.ReentrantLock;
@@ -18,22 +18,33 @@ public class EvenNumRunnable implements Runnable {
 
   @Override
   public void run() {
-    int i = 1;
+
+    int i = 2;
+
     while (i < 101) {
       try {
         reentrantLock.lock();
+//        System.out.println("Even : " + i);
         if (!controlFlag.flag) {
           if (i % 2 == 0) {
             System.out
-                .println("Even Num Runnable: " + i + ", Flag is:" + controlFlag.flag);
+                .println("Even Num Runnable = " + i);
             controlFlag.setFlag(true);
-            i = i + 2;
+            i += 2;
+            reentrantLock.notify();
+          }
+        } else {
+          try {
+            reentrantLock.wait();
+          } catch (InterruptedException e) {
+            e.printStackTrace();
           }
         }
       } finally {
         reentrantLock.unlock();
       }
     }
+
   }
 
 }

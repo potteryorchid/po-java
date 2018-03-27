@@ -1,4 +1,4 @@
-package com.po.concurrent;
+package com.po.concurrent.runnable;
 
 import com.po.concurrent.common.ControlFlag;
 import java.util.concurrent.locks.ReentrantLock;
@@ -18,22 +18,33 @@ public class OddNumRunnable implements Runnable {
 
   @Override
   public void run() {
+
     int i = 1;
+
     while (i < 101) {
       try {
         reentrantLock.lock();
+//        System.out.println("Odd : " + i);
         if (controlFlag.flag) {
           if (i % 2 == 1) {
             System.out
-                .println("Odd Num Runnable: " + i + ", Flag is:" + controlFlag.flag);
+                .println("Odd Num Runnable = " + i);
             controlFlag.setFlag(false);
-            i = i + 2;
+            i += 2;
+            reentrantLock.notify();
+          }
+        } else {
+          try {
+            reentrantLock.wait();
+          } catch (InterruptedException e) {
+            e.printStackTrace();
           }
         }
       } finally {
         reentrantLock.unlock();
       }
     }
+
   }
 
 }
