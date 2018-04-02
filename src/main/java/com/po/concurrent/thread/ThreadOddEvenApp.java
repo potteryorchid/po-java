@@ -1,7 +1,5 @@
 package com.po.concurrent.thread;
 
-import com.po.concurrent.common.ControlFlag;
-
 /**
  * Thread 应用
  * Created by ZJ on 27/03/2018.

@@ -1,7 +1,6 @@
 package com.po.concurrent.runnable;
 
-import com.po.concurrent.common.ControlFlag;
-import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -12,12 +11,12 @@ public class RunnableOddEvenApp {
 
   public static void main(String[] args) {
 
-    CyclicBarrier cyclicBarrier;
     ReentrantLock reentrantLock = new ReentrantLock();
-    ControlFlag controlFlag = new ControlFlag();
+    Condition evenCdt = reentrantLock.newCondition();
+    Condition oddCdt = reentrantLock.newCondition();
 
-    EvenNumRunnable evenNumRunnable = new EvenNumRunnable(reentrantLock, controlFlag);
-    OddNumRunnable oddNumRunnable = new OddNumRunnable(reentrantLock, controlFlag);
+    EvenNumRunnable evenNumRunnable = new EvenNumRunnable(reentrantLock, oddCdt, evenCdt);
+    OddNumRunnable oddNumRunnable = new OddNumRunnable(reentrantLock, oddCdt, evenCdt);
 
     new Thread(oddNumRunnable).start();
     new Thread(evenNumRunnable).start();
