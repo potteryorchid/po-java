@@ -19,6 +19,8 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * 4、优先执行 signal() 方法，释放线程占用资源，以保证线程配合执行。
  *
+ * 5、程序使用了两个 Condition 来控制线程调用，所以每次打印都只占用一次线程调度，线程高效。
+ *
  * Created by ZJ on 27/03/2018.
  */
 public class OddNumRunnable implements Runnable {

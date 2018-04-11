@@ -14,7 +14,7 @@ package com.po.concurrent.thread;
  * 4、wait() 带时间参数，表示最大等待被唤醒时间，超时将重试获取竞争资源。不带时间参数会一直等待下去，直到被 notify() 或 notifyAll() 唤醒。建议使用带时间参数的
  * wait() 方法。
  *
- * 5、线程通过一个条件参数 ControlFlag 来控制 notify() 和 wait() 的调用，所以一般每个线程需要执行两次才能完成一次打印操作。
+ * 5、线程通过一个条件参数 ControlFlag 来控制 notify() 和 wait() 的调用。因为只用一个线程控制条件，每次打印都需要占用两次线程调度。
  *
  * Created by ZJ on 20/03/2018.
  */
