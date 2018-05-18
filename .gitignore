@@ -12,3 +12,7 @@
 */.project
 */.settings
 */.factorypath
+
+*.log
+*.gz
+logs/
