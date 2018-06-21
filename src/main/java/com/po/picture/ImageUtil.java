@@ -13,6 +13,7 @@ import java.awt.image.ColorConvertOp;
 import java.awt.image.CropImageFilter;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
+import java.awt.image.Raster;
 import java.io.File;
 import java.io.IOException;
 
@@ -58,10 +59,8 @@ public class ImageUtil {
 
   public static void main(String[] args) {
 
-    ImageUtil.zoomInOrOutByRatio("/Users/zj/Documents/bak/test/7.bmp",
-        "/Users/zj/Documents/bak/test/01.jpg", ZOOM_IN, 2, Image.SCALE_DEFAULT);
-
-//    System.out.println(ImageUtil.getFormatName("/Users/zj/Documents/bak/test/7.bmp"));
+    boolean f = ImageUtil.isColorImage("/Users/zj/Documents/bak/test/23.png", 2, true);
+    System.out.println(f);
   }
 
   /**
@@ -249,6 +248,67 @@ public class ImageUtil {
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  public static boolean isColorImage(String srcPath, int lv, boolean clip) {
+    try {
+      BufferedImage srcImage = ImageIO.read(new File(srcPath));
+      Raster raster = srcImage.getRaster();
+
+      int no = raster.getNumBands();
+      if (no < 3) {
+        return false;
+      }
+      //Set level value.
+      lv = 10 * lv;
+      int x = 0;
+      int y = 0;
+      int width = raster.getWidth();
+      int height = raster.getHeight();
+
+      if (clip) {
+        int clipSize = 300;
+        if (width > clipSize && height > clipSize) {
+          x = (width - clipSize) / 2;
+          y = (height - clipSize) / 2;
+          width = clipSize;
+          height = clipSize;
+        }
+      }
+
+      int wh = width * height;
+      int threshold = wh / 8;
+
+      int[] pixels = srcImage.getRGB(x, y, width, height, null, 0, width);
+
+      int res_rg = 0;
+      int res_gb = 0;
+      int res_br = 0;
+
+      for (int i = 0; i < pixels.length; i++) {
+        int r = (pixels[i] & 0xff0000) >> 16;
+        int g = (pixels[i] & 0xff00) >> 8;
+        int b = (pixels[i] & 0xff);
+        if (Math.abs(r - g) > lv) {
+          res_rg++;
+        }
+        if (Math.abs(g - b) > lv) {
+          res_gb++;
+        }
+        if (Math.abs(b - r) > lv) {
+          res_br++;
+        }
+      }
+
+      int res = res_rg + res_gb + res_br;
+      if (res < threshold) {
+        return false;
+      }
+
+    } catch (Exception e) {
+
+    }
+    return true;
   }
 
 }
