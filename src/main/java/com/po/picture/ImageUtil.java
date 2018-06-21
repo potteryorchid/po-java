@@ -59,7 +59,7 @@ public class ImageUtil {
 
   public static void main(String[] args) {
 
-    boolean f = ImageUtil.isColorImage("/Users/zj/Documents/bak/test/23.png", 2, true);
+    boolean f = ImageUtil.isColorImageByRaster("/Users/zj/Documents/bak/test/9.jpg", 2, true);
     System.out.println(f);
   }
 
@@ -306,9 +306,116 @@ public class ImageUtil {
       }
 
     } catch (Exception e) {
-
+      e.printStackTrace();
     }
     return true;
+  }
+
+  /**
+   *
+   * @param srcPath
+   * @param lv
+   * @param clip
+   * @return
+   */
+  public static boolean isColorImageByRaster(String srcPath, int lv, boolean clip) {
+    try {
+      BufferedImage srcImage = ImageIO.read(new File(srcPath));
+      Raster raster = srcImage.getRaster();
+
+      int no = raster.getNumBands();
+      if (no < 3) {
+        return false;
+      }
+      //Set level value.
+      lv = 10 * lv;
+      int x = 0;
+      int y = 0;
+      int width = raster.getWidth();
+      int height = raster.getHeight();
+
+      if (clip) {
+        int clipSize = 300;
+        if (width > clipSize && height > clipSize) {
+          x = (width - clipSize) / 2;
+          y = (height - clipSize) / 2;
+          width = clipSize;
+          height = clipSize;
+        }
+      }
+
+      int wh = width * height;
+      int threshold = wh / 8;
+
+      int[] arr = new int[wh * no];
+      int[] pixels = raster.getPixels(x, y, width, height, arr);
+
+      int res_rg = 0;
+      int res_gb = 0;
+      int res_br = 0;
+
+      for (int i = 0; i < pixels.length; i += no) {
+        int r = pixels[i];
+        int g = pixels[i + 1];
+        int b = pixels[i + 2];
+        if (Math.abs(r - g) > lv) {
+          res_rg++;
+        }
+        if (Math.abs(g - b) > lv) {
+          res_gb++;
+        }
+        if (Math.abs(b - r) > lv) {
+          res_br++;
+        }
+      }
+
+      int res = res_rg + res_gb + res_br;
+      if (res < threshold) {
+        return false;
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return true;
+  }
+
+  public static void checkImage(String srcPath, int lv) {
+    try {
+      BufferedImage srcImage = ImageIO.read(new File(srcPath));
+      Raster raster = srcImage.getRaster();
+
+      int no = raster.getNumBands();
+
+      int x = 0;
+      int y = 0;
+      int width = raster.getWidth();
+      int height = raster.getHeight();
+
+      int wh = width * height;
+
+      int[] pixels = srcImage.getRGB(x, y, width, height, null, 0, width);
+
+      int[] arr = new int[wh * no];
+      int[] pixelArr = raster.getPixels(x, y, width, height, arr);
+
+      for (int i = 0; i < pixels.length; i++) {
+        int r = (pixels[i] & 0xff0000) >> 16;
+        int g = (pixels[i] & 0xff00) >> 8;
+        int b = (pixels[i] & 0xff);
+        System.out.print("First: " + r + "=" + g + "=" + b + " === Second: ");
+
+        int j = i * no;
+
+        for (int m = 0; m < no; m++) {
+          System.out.print(pixelArr[j + m] + "=");
+        }
+        System.out.println();
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
 }
