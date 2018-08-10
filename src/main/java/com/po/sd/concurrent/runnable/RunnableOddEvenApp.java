@@ -1,4 +1,4 @@
-package com.po.concurrent.runnable;
+package com.po.sd.concurrent.runnable;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;

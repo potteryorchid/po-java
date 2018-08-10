@@ -1,4 +1,4 @@
-package com.po.concurrent.thread;
+package com.po.sd.concurrent.thread;
 
 /**
  * Created by ZJ on 27/03/2018.

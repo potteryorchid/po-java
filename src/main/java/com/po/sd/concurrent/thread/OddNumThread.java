@@ -1,4 +1,4 @@
-package com.po.concurrent.thread;
+package com.po.sd.concurrent.thread;
 
 /**
  * 该实例是两个线程并行运行，并分别交替配合按顺序打印出奇偶数。多线程配合工作场景下，当使用 synchronized 控制线程安全时，建议使用 wait() 和 notify()。
@@ -18,28 +18,28 @@ package com.po.concurrent.thread;
  *
  * Created by ZJ on 20/03/2018.
  */
-public class EvenNumThread extends Thread {
+public class OddNumThread extends Thread {
 
   ControlFlag controlFlag;
 
-  public EvenNumThread(ControlFlag controlFlag) {
+  public OddNumThread(ControlFlag controlFlag) {
     this.controlFlag = controlFlag;
   }
 
   @Override
   public void run() {
-    int i = 2;
+    int i = 1;
     while (i < 101) {
-      System.out.println("Even: " + i);
+      System.out.println("Odd: " + i);
       synchronized (controlFlag) {
-        if (!controlFlag.flag) {
-          System.out.println("Even Num Thread = " + i);
-          controlFlag.setFlag(true);
+        if (controlFlag.flag) {
+          System.out.println("Odd Num Thread = " + i);
+          controlFlag.setFlag(false);
           i = i + 2;
           // 在此处唤醒另一个等待的线程
           controlFlag.notify();
         } else {
-          System.out.println("Even wait" + i);
+          System.out.println("Odd wait" + i);
           try {
             // 在条件不满足是执行等待操作，释放掉竞争资源
             controlFlag.wait(10);
