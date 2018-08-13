@@ -7,7 +7,7 @@ package com.po.sd.concurrent.thread;
  * wait() 和 notify()。
  *
  * 2、wait() 和 notify() 必须在 synchronized 作用范围内使用，否则会报异常错误: Exception in thread "Thread-1"
- * java.lang.IllegalMonitorStateException.
+ * java.lang.IllegalMonitorStateException. wait()、notify()、synchronized 都是基于JVM monitor 对象实现.
  *
  * 3、notify() 和  notifyAll() ：当确定只有一个线程需要被唤醒时才可以使用 notify()，其他情况都使用 notifyAll()，表示唤醒其他等待线程。
  *
@@ -39,7 +39,7 @@ public class EvenNumThread extends Thread {
           // 在此处唤醒另一个等待的线程
           controlFlag.notify();
         } else {
-          System.out.println("Even wait" + i);
+          System.out.println("Even wait " + i);
           try {
             // 在条件不满足是执行等待操作，释放掉竞争资源
             controlFlag.wait(10);

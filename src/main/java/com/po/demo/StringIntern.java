@@ -5,8 +5,15 @@ package com.po.demo;
  */
 public class StringIntern {
 
-  public static void main(String[] args) {
+  synchronized void prt() {
+    System.out.println(Thread.currentThread().getId());
 
+    System.out.println(Thread.currentThread().getName());
+  }
+
+  public static void main(String[] args) {
+    int i = 1000;
+    System.out.println(i);
   }
 
 }
