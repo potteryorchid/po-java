@@ -55,16 +55,78 @@ package com.po.sd.algorithm;
  */
 public class BitOper {
 
+  /**
+   * 1、位运算判断偶数，根据最未位是0还是1来决定，为0就是偶数，为1就是奇数。
+   *
+   * @param x Input Value
+   * @return boolean
+   */
+  public static boolean isEven(int x) {
+    if ((x & 1) == 1) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * 2、位运算交换两个数，异或满足交换率：a^b^c = a^c^b，一个数和自己异或的结果为0，并且任何数与0异或都会不变的。
+   *
+   * a = a ^ b
+   * b = b ^ a = b ^ (a ^ b) = b ^ (b ^ a) = b ^ b ^ a = 0 ^ a = a
+   * a = a ^ b = (a ^ b) ^ b = (a ^ b) ^ a = a ^ a ^ b = 0 ^ b = b
+   *
+   * @param a Input Value
+   * @param b Input Value
+   */
+  public static int[] swap(int a, int b) {
+    a ^= b;
+    b ^= a;
+    a ^= b;
+    return new int[]{a, b};
+  }
+
+  /**
+   * 3、位运算求负数 改变数据符号：正数求负数，负数求正数。 一个数可以通过对其取反后加1来得到正数。
+   *
+   * eg：
+   *
+   * 5 => 00000000 00000000 00000000 00000101 (计算机存储补码) => ~ + 1 => 11111111 11111111 11111111
+   * 11111010 + 1 => 11111111 11111111 11111111 11111011 => -5
+   *
+   * -5 => 11111111 11111111 11111111 11111011 (计算机存储补码) => ~ + 1 => 00000000 00000000 00000000
+   * 00000100 + 1 => 00000000 00000000 00000000 00000101 => 5
+   *
+   * @param a Input Value
+   * @return int
+   */
+  public static int transSymbol(int a) {
+    return ~a + 1;
+  }
+
   public static void main(String[] args) {
+
     /**
      * Java int is 32 bits，所以计算机中存储的二进制为（计算机以补码形式存储）：
      * a = 15, bit data is 00000000 00000000 00000000 00001111.（补码）
      * b = -15, bit data is 11111111 11111111 11111111 11110001.（补码，原码为：10000000 00000000 00000000 00001111）
      *
      * a >> 2  =>  00000000 00000000 00000000 00000011(补码)  =>  00000000 00000000 00000000 00000011(原码)  =>  3
-     * a >> 2  =>  11111111 11111111 11111111 11111100(补码)  =>  10000000 00000000 00000000 00000100(原码)  =>  -4
+     * b >> 2  =>  11111111 11111111 11111111 11111100(补码)  =>  10000000 00000000 00000000 00000100(原码)  =>  -4
      */
     int a = 15, b = -15;
-    System.out.printf("\nRes: 15 >> 2 => %d  ||  -15 >> 2 => %d \n", a >> 2, b >> 2);
+    System.out.printf("\rRes: 15 >> 2 => %d  ||  -15 >> 2 => %d \n", a >> 2, b >> 2);
+
+    /**
+     * 奇偶判断 \r 回车 \n 换行
+     */
+    System.out.printf("\r是否偶数：%s \r", BitOper.isEven(78));
+
+    /**
+     * 交换两个数
+     */
+    int[] res = BitOper.swap(a, b);
+    System.out.printf("\ra = %s  ||  b = %s \r", res[0], res[1]);
+
+    System.out.printf("Transform symbol: %d\r",BitOper.transSymbol(-78));
   }
 }
