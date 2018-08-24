@@ -7,6 +7,20 @@ package com.po.sd.algorithm;
  * 补码表示法规定：正数的补码与原码相同，负数的补码为对该数的原码除符号位外各位取反，然后在最后一位加1. 正零和负零的补码相同，[+0]补=[-0]补=0000 0000B
  * 由补码求原码的过程跟由原码求补码的过程一样。
  *
+ * #### 采用补码运算具有如下两个特征：
+ *
+ * 1）因为使用补码可以将符号位和其他位统一处理，同时，减法也可以按加法来处理，即如果是补码表示的数，不管是加减法都直接用加法运算即可实现。
+ *
+ * 2）两个用补码表示的数相加时，如果最高位（符号位）有进位，则进位被舍弃。
+ *
+ * #### 这样的运算有两个好处：
+ *
+ * 1）使符号位能与有效值部分一起参加运算，从而简化运算规则。从而可以简化运算器的结构，提高运算速度；（减法运算可以用加法运算表示出来。）
+ *
+ * 2）加法运算比减法运算更易于实现。使减法运算转换为加法运算，进一步简化计算机中运算器的线路设计。
+ *
+ *
+ *
  * ##原码##
  *
  * 00000000 00000000 00000000 00000101 是 5的 原码
@@ -103,7 +117,61 @@ public class BitOper {
     return ~a + 1;
   }
 
+  /**
+   * 4、位运算求绝对值 int 32 位，先移位来取符号位，int i = a >> 31; 要注意如果a为正数，i等于0，为负数，i等于-1。对于任何数，与0异或都会保持不变，与-1即0xFFFFFFFF异或就相当于取反。因此，a与i异或后再减i（因为i为0或-1，所以减i即是要么加0要么加1）也可以得到绝对值。
+   *
+   * eg：
+   *
+   * 5 => 00000000 00000000 00000000 00000101 (计算机存储补码) => a >> 31 => 00000000 00000000 00000000
+   * 00000000 => a^i => 00000000 00000000 00000000 00000101 => (a^i)-i => 00000000 00000000 00000000
+   * 00000101 => -5
+   *
+   * -5 => 11111111 11111111 11111111 11111011 (计算机存储补码) => a >> 31 => 11111111 11111111 11111111
+   * 11111111 => a^i => 00000000 00000000 00000000 00000100 => (a^i)-i => (a^i)+1 => 00000000
+   * 00000000 00000000 00000101 => 5
+   *
+   * @param a Input value
+   * @return int
+   */
+  public static int abs(int a) {
+    int i = a >> 31;
+    return (a ^ i) - i;
+  }
+
+  /**
+   * 根据长度创建一个存放 bits 的 byte[]，默认 bits 初始化为 0，可以替代 boolean[]
+   *
+   * @param length ：二进制数 bits 的长度
+   * @return byte[] ：存放 bits 的 byte[] 数组
+   */
+  public static byte[] createBitsByteArray(int length) {
+    // 适用于正整数 整除 (length >> 3) equals (length / 8)
+    return new byte[length >> 3 + 1];
+  }
+
+  /**
+   * 将 bits 中的某个位设置为 1
+   *
+   * @param bits 二进制数 bits
+   * @param position 需要设置为 1 的 bits 位置
+   */
+  public static void setBitsTo1(byte[] bits, int position) {
+    /**
+     * 适用于 2 的幂次的正整数
+     * 整除 (length >> 3) equals (length / 8)
+     * 除8取余 (position & 7) equals (position % 8)
+     */
+    bits[position >> 3] |= 1 << (position & 7);
+  }
+
+  public static boolean checkBitsIs1(byte[] bits, int position) {
+    return true;
+  }
+
   public static void main(String[] args) {
+    int i = -47 % 8;
+    System.out.println(i);
+    System.out.println(i & 7);
 
     /**
      * Java int is 32 bits，所以计算机中存储的二进制为（计算机以补码形式存储）：
@@ -127,6 +195,14 @@ public class BitOper {
     int[] res = BitOper.swap(a, b);
     System.out.printf("\ra = %s  ||  b = %s \r", res[0], res[1]);
 
-    System.out.printf("Transform symbol: %d\r",BitOper.transSymbol(-78));
+    /**
+     * 改变正负号
+     */
+    System.out.printf("Transform symbol: %d\r", BitOper.transSymbol(-78));
+
+    /**
+     * 求绝对值
+     */
+    System.out.printf("Abs value: %d\r", BitOper.abs(3));
   }
 }
