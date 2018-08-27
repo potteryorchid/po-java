@@ -146,14 +146,14 @@ public class BitOper {
    */
   public static byte[] createBitsByteArray(int length) {
     // 适用于正整数 整除 (length >> 3) equals (length / 8)
-    return new byte[length >> 3 + 1];
+    return new byte[(length >> 3) + 1];
   }
 
   /**
    * 将 bits 中的某个位设置为 1
    *
    * @param bits 二进制数 bits
-   * @param position 需要设置为 1 的 bits 位置
+   * @param position 需要设置为 1 的 bits 位置，从 0 开始
    */
   public static void setBitsTo1(byte[] bits, int position) {
     /**
@@ -164,14 +164,22 @@ public class BitOper {
     bits[position >> 3] |= 1 << (position & 7);
   }
 
+  /**
+   * 适用于 2 的幂次的正整数
+   * 判断某一位置上 bit 值是否为 1
+   *
+   * @param bits 存放 bits 的 byte[] 数组，可以替代 boolean[]
+   * @param position 位置，从 0 开始
+   * @return boolean
+   */
   public static boolean checkBitsIs1(byte[] bits, int position) {
-    return true;
+    if ((bits[position >> 3] & (1 << (position & 7))) > 0) {
+      return true;
+    }
+    return false;
   }
 
   public static void main(String[] args) {
-    int i = -47 % 8;
-    System.out.println(i);
-    System.out.println(i & 7);
 
     /**
      * Java int is 32 bits，所以计算机中存储的二进制为（计算机以补码形式存储）：
@@ -204,5 +212,17 @@ public class BitOper {
      * 求绝对值
      */
     System.out.printf("Abs value: %d\r", BitOper.abs(3));
+
+    /**
+     * Bits array[]
+     */
+    byte[] bytes = BitOper.createBitsByteArray(99);
+    BitOper.setBitsTo1(bytes, 3);
+    BitOper.setBitsTo1(bytes, 23);
+    BitOper.setBitsTo1(bytes, 93);
+    System.out.println(BitOper.checkBitsIs1(bytes,24));
+    System.out.println(BitOper.checkBitsIs1(bytes,23));
+
+    
   }
 }
