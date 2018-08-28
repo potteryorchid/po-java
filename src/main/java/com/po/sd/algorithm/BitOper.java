@@ -242,6 +242,21 @@ public class BitOper {
     return in;
   }
 
+  /**
+   * 统计二进制数中 1 的个数
+   *
+   * @param in input value
+   * @return int result
+   */
+  public static int countBits1(int in) {
+    in = (in & 0x55555555) + ((in >>> 1) & 0x55555555);
+    in = (in & 0x33333333) + ((in >>> 2) & 0x33333333);
+    in = (in & 0x0f0f0f0f) + ((in >>> 4) & 0x0f0f0f0f);
+    in = (in & 0x00ff00ff) + ((in >>> 8) & 0x00ff00ff);
+    in = (in & 0x0000ffff) + ((in >>> 16) & 0x0000ffff);
+    return in;
+  }
+
   public static void main(String[] args) {
 
     /**
