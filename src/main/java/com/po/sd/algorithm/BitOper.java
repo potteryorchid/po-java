@@ -257,6 +257,59 @@ public class BitOper {
     return in;
   }
 
+  /**
+   * 数据集合中所有数都是成对出现的，即每一个数的出现次数为偶数，在这样数据集合中找出丢失的一个数。
+   * 利用异或运算的两个特性: 1.自己与自己异或结果为0; 2.异或满足交换律。因此我们将这些数字全异或一遍，结果就一定是那个仅出现一个的那个数。
+   * eg: int[] ins = new int[]{23, 43, 5, 7, 53, 43, 13, 5, 53, 23, 7} 中找出 13
+   *
+   * @param ins input value
+   * @return int result
+   */
+  public static int findLostNum(int[] ins) {
+    int lost = 0;
+    for (int in : ins) {
+      lost ^= in;
+    }
+    return lost;
+  }
+
+  /**
+   * 数据集合中所有数都是成对出现的，即每一个数的出现次数为偶数，在这样的数据集合中找出丢失的两个数。
+   * 利用异或运算的两个特性: 1.自己与自己异或结果为0; 2.异或满足交换律。因此我们将这些数字全异或一遍，结果就一定是那个仅出现一个的那个数。
+   * 这个题目的关键点就是将A，B分开到二个数组中。由于A，B肯定是不相等的，因此在二进制上必定有一位是不同的。根据这一位是0还是1可以将A，B分开到A组和B组。
+   * 而这个数组中其它数字要么就属于A组，要么就属于B组。再对A组和B组分别执行“异或”解法就可以得到A，B了。
+   * 而要判断A，B在哪一位上不相同，只要根据A异或B的结果就可以知道了，这个结果在二进制上为1的位都说明A，B在这一位上是不相同的。
+   *
+   * eg: int[] ins = new int[]{23, 43, 71, 5, 7, 53, 43, 13, 5, 53, 23, 7} 中找出 13,71
+   *
+   * @param ins input value
+   * @return int[] result
+   */
+  public static int[] findTwoLostNum(int[] ins) {
+    int flag = 0, pos = 0, res1 = 0, res2 = 0;
+
+    // 遍历求异或和
+    for (int in : ins) {
+      flag ^= in;
+    }
+    // 根据和数判断两个缺失数字某一位上不同
+    for (; pos < Integer.SIZE; pos++) {
+      if (((flag >> pos) & 1) == 1) {
+        break;
+      }
+    }
+    // 将所有数字根据上面求出的不同位值的位置，将数字分成两组，按求解缺失一个数字的原理分别求出缺失的数字
+    for (int in : ins) {
+      if (((in >> pos) & 1) == 1) {
+        res1 ^= in;
+      } else {
+        res2 ^= in;
+      }
+    }
+
+    return new int[]{res1, res2};
+  }
+
   public static void main(String[] args) {
 
     /**
