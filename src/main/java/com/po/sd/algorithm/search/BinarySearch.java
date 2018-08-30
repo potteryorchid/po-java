@@ -1,4 +1,4 @@
-package com.po.sd.sorting;
+package com.po.sd.algorithm.search;
 
 /**
  * Created by ZJ on 21/08/2018.
