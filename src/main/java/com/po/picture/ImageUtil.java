@@ -6,14 +6,18 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.color.ColorSpace;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
 import java.awt.image.CropImageFilter;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
 import java.awt.image.Raster;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -21,6 +25,8 @@ import java.util.Iterator;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
 /**
  * Created by ZJ on 13/06/2018.
@@ -57,10 +63,12 @@ public class ImageUtil {
    */
   public static final String IMAGE_BMP = "bmp";
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
 
-    boolean f = ImageUtil.isColorImageByRaster("/Users/zj/Documents/bak/test/9.jpg", 2, true);
-    System.out.println(f);
+//    boolean f = ImageUtil.isColorImageByRaster("/Users/zj/Documents/bak/test/9.jpg", 2, true);
+//    System.out.println(f);
+
+    ImageUtil.getCircleImage(ImageIO.read(new File("/Users/zj/Desktop/data.jpeg")));
   }
 
   /**
@@ -157,16 +165,16 @@ public class ImageUtil {
       if (srcWidth > 0 && srcHeight > 0) {
         Image image = bufferedImage.getScaledInstance(srcWidth, srcHeight,
             scaleMode);
-
+        // 裁剪器
         ImageFilter cropFilter = new CropImageFilter(x, y, width, height);
-
+        // 生成结果图片数据
         Image resImage = Toolkit.getDefaultToolkit().createImage(
             new FilteredImageSource(image.getSource(),
                 cropFilter));
-
+        // 创建结果文件流缓冲
         BufferedImage resBufferedImage = new BufferedImage(width, height,
             BufferedImage.TYPE_INT_RGB);
-
+        // 画图器,将结果数据写入缓冲器
         Graphics g = resBufferedImage.getGraphics();
         g.drawImage(resImage, 0, 0, width, height, null);
         g.dispose();
@@ -178,10 +186,61 @@ public class ImageUtil {
     }
   }
 
+  public static ByteArrayOutputStream getCircleImage(BufferedImage image) throws IOException {
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+    try {
+      BufferedImage res = new BufferedImage(image.getWidth(), image.getHeight(),
+          BufferedImage.TYPE_INT_ARGB);
+
+      Graphics2D g2 = res.createGraphics();
+
+      int diameter = Math.max(image.getWidth(), image.getHeight());
+      g2.setClip(new Ellipse2D.Double((image.getWidth() - diameter) / 2, 0, diameter,
+          diameter));
+
+      // 使用 setRenderingHint 设置抗锯齿
+      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+      g2.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
+      g2.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,
+          RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+      g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+          RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+
+      g2.drawImage(image, 0, 0, null);
+      g2.dispose();
+
+      ImageIO.write(res, "png", bos);
+      return bos;
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      bos.close();
+    }
+    return null;
+  }
+
+  public static String imageToBase64(ByteArrayOutputStream bos) {
+    return new BASE64Encoder().encode(bos.toByteArray());
+  }
+
+  public static BufferedImage base64ToImage(String base64) {
+    BufferedImage image = null;
+    byte[] imageByte;
+    try {
+      BASE64Decoder decoder = new BASE64Decoder();
+      imageByte = decoder.decodeBuffer(base64);
+      ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
+      image = ImageIO.read(bis);
+      bis.close();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return image;
+  }
+
   /**
-   *
-   * @param srcPath
-   * @param resPath
+   * 文件转存
    */
   public static void convert(String srcPath, String resPath) {
     try {
