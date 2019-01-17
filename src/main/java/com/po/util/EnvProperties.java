@@ -16,9 +16,9 @@ import java.util.regex.Pattern;
  */
 public class EnvProperties {
 
-  private static Properties properties = new Properties();
+  private static final Properties properties = new Properties();
 
-  private static HashMap env = new HashMap<String, EnvEntry>();
+  private static HashMap<String, EnvEntry> env = new HashMap<>();
 
   static {
     try {
@@ -99,8 +99,8 @@ public class EnvProperties {
       String mr = matcher.group();
       String v = properties.get(k).toString();
       String ek = mr.replace("${", "").replace("}", "").split(":")[0];
-      EnvEntry envEntry = (EnvEntry) env.get(ek);
-      properties.setProperty(k, v.replaceAll(pattern.pattern(), envEntry.getV()));
+      EnvEntry envEntry = env.get(ek);
+      properties.setProperty(k, v.replace(mr, envEntry.getV()));
     }
   }
 
