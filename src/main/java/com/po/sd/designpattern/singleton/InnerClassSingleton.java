@@ -1,4 +1,4 @@
-package com.po.sd.designpattern;
+package com.po.sd.designpattern.singleton;
 
 import java.io.Serializable;
 

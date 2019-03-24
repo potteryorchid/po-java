@@ -1,4 +1,4 @@
-package com.po.sd.designpattern;
+package com.po.sd.designpattern.singleton;
 
 /**
  * 《 7种设计原则 》
@@ -10,30 +10,28 @@ package com.po.sd.designpattern;
  * 6、合成复用原则：尽量使用对象组合，而不是继承来达到复用的目的。
  * 7、迪米特法则：一个软件实体应当尽可能少地与其他实体发生相互作用。一个对象只能与直接朋友发生交互，不要与"陌生人"发生直接交互。
  *
- * 单例模式：Singleton Pattern，确保某一个类只有一个实例，而且自行实例化并向整个系统提供这个实例，这个类称为单例类，它提供全局访问的方法.
+ * 单例模式：Singleton Pattern，确保某一个类只有一个实例，而且自行实例化并向整个系统提供这个实例，这个类称为单例类，它提供全局访问的方法。
  *
- * 双重检查单例：懒汉生成方式。确保实例化执行一次，线程安全，延时加载，效率高。
+ * 枚举实现的单例可以在多线程、反序列化、反射、克隆情况下都能保证单例。
  *
- * Created by po on 23/03/2019.
+ * Created by po on 2017/7/8.
  */
-public class DoubleCheckSingleton {
+public enum EnumSingleton {
 
-    //添加 volatile 关键字，可实现实例状态及时共享。
-    private static volatile DoubleCheckSingleton instance;
+    // 单例实例
+    INSTANCE;
 
-    private DoubleCheckSingleton() {
+    // 实例的操作方法
+    public void doSomething() {
+        System.out.println("singleton");
     }
 
-    public static final DoubleCheckSingleton getInstance() {
-        // 第一次判断可以确保实例化后的高效访问，避免重复加锁。
-        if (null == instance) {
-            // 添加锁后，重复判断，确保实例化一次。
-            synchronized (DoubleCheckSingleton.class) {
-                if (null == instance) {
-                    instance = new DoubleCheckSingleton();
-                }
-            }
-        }
-        return instance;
+    public static void main(String[] args) {
+        EnumSingleton es1 = EnumSingleton.INSTANCE;
+        EnumSingleton es2 = EnumSingleton.INSTANCE;
+
+        System.out.println(es1 == es2);
+
+        EnumSingleton.INSTANCE.doSomething();
     }
 }

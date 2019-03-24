@@ -1,4 +1,4 @@
-package com.po.sd.designpattern;
+package com.po.sd.designpattern.singleton;
 
 /**
  * 《 7种设计原则 》
@@ -10,28 +10,20 @@ package com.po.sd.designpattern;
  * 6、合成复用原则：尽量使用对象组合，而不是继承来达到复用的目的。
  * 7、迪米特法则：一个软件实体应当尽可能少地与其他实体发生相互作用。一个对象只能与直接朋友发生交互，不要与"陌生人"发生直接交互。
  *
- * 单例模式：Singleton Pattern，确保某一个类只有一个实例，而且自行实例化并向整个系统提供这个实例，这个类称为单例类，它提供全局访问的方法。
+ * 单例模式：Singleton Pattern，确保某一个类只有一个实例，而且自行实例化并向整个系统提供这个实例，这个类称为单例类，它提供全局访问的方法.
  *
- * 枚举实现的单例可以在多线程、反序列化、反射、克隆情况下都能保证单例。
+ * 静态单例：饿汉生成方式。写法简单，避免线程同步问题，类装载时就完成实例化，没有Lazy Loading效果，若实例从未使用过会造成资源浪费。
  *
- * Created by po on 2017/7/8.
+ * Created by po on 23/03/2019.
  */
-public enum EnumSingleton {
+public class StaticSingleton {
 
-    // 单例实例
-    INSTANCE;
+    private static final StaticSingleton instance = new StaticSingleton();
 
-    // 实例的操作方法
-    public void doSomething() {
-        System.out.println("singleton");
+    private StaticSingleton() {
     }
 
-    public static void main(String[] args) {
-        EnumSingleton es1 = EnumSingleton.INSTANCE;
-        EnumSingleton es2 = EnumSingleton.INSTANCE;
-
-        System.out.println(es1 == es2);
-
-        EnumSingleton.INSTANCE.doSomething();
+    public static final StaticSingleton getInstance() {
+        return instance;
     }
 }
