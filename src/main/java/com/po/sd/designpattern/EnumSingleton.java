@@ -18,8 +18,10 @@ package com.po.sd.designpattern;
  */
 public enum EnumSingleton {
 
+    // 单例实例
     INSTANCE;
 
+    // 实例的操作方法
     public void doSomething() {
         System.out.println("singleton");
     }
