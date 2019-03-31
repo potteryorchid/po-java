@@ -1,7 +1,4 @@
-package com.po.demo;
-
-import java.util.LinkedList;
-import java.util.List;
+package com.po.leetcode;
 
 /**
  * Created by ZJ on 18/07/2018.
