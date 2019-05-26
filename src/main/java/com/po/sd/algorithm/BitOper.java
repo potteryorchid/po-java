@@ -242,9 +242,10 @@ public class BitOper {
   }
 
   /**
-   * 统计二进制数中 1 的个数
+   * variable-precision SWAR 算法统计 32位二进制数中 1 的个数，可以衍生出求64位128位等二进制数中 1 的个数。
+   * 过程：先求两两位的1的个数，求四位四位1的个数，求8位8位1的个数，依次类推。
    *
-   * @param in input value
+   * @param in int type number has 32 bits in java
    * @return int result
    */
   public static int countBits1(int in) {

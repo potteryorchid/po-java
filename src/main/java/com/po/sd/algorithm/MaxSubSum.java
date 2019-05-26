@@ -21,7 +21,9 @@ public class MaxSubSum {
       if (tmpSum < 0) {
         tmpSum = 0.0;
       } else {
-        maxSum = tmpSum;
+        if (tmpSum > maxSum) {
+          maxSum = tmpSum;
+        }
       }
     }
     return maxSum;
@@ -30,7 +32,7 @@ public class MaxSubSum {
   public static void main(String[] args) {
 
     double[] dts = new double[]{
-        1.0, -2.3, 3.4, 5, 6, -12, 76, 23
+        1.0, -2.3, 3.4, 5, 6, -12, 5
     };
 
     System.out.println(MaxSubSum.getMaxSubSum(dts));
