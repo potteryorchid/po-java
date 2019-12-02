@@ -79,8 +79,65 @@ public class NioBuffer {
     }
   }
 
-  public static void main(String[] args) {
+  public void scatterAndGather() {
+    try {
+      RandomAccessFile file = new RandomAccessFile("/Users/po/Documents/repo/tmp/tmp.txt", "rw");
+      FileChannel channel = file.getChannel();
+
+      /*
+      allocateDirect(int): 分配堆外内存，直接在JVM外分配内存，这种分配方式低效，但省去内存copy，当文件大小比较大时效率高。
+      allocate(int): 普通内存分配，在JVM内分配内存。
+       */
+      ByteBuffer tile = ByteBuffer.allocate(20);
+      ByteBuffer text = ByteBuffer.allocate(40);
+
+      ByteBuffer[] arr = {tile, text};
+
+      // write data into buffers
+      channel.read(arr);
+
+      // read data and print the data out from buffer.
+      tile.flip();
+      text.flip();
+
+      while (tile.hasRemaining()) {
+        System.out.print((char) tile.get());
+      }
+      while (text.hasRemaining()) {
+        System.out.print((char) text.get());
+      }
+
+      // reset position to zero.
+      tile.rewind();
+      text.rewind();
+
+      RandomAccessFile res = new RandomAccessFile("/Users/po/Documents/repo/tmp/res.txt", "rw");
+      FileChannel resChannel = res.getChannel();
+
+      resChannel.position(47);
+
+      resChannel.write(arr);
+
+      resChannel.force(true);
+
+      resChannel.close();
+      channel.close();
+
+      res.close();
+      file.close();
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static void main(String[] args) throws InterruptedException {
     NioBuffer nioBuffer = new NioBuffer();
-    nioBuffer.basicMethod();
+    while (true){
+      nioBuffer.basicMethod();
+      Thread.sleep(10000);
+    }
+
   }
 }

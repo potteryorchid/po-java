@@ -1,0 +1,19 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Test",
+            "request": "launch",
+            "mainClass": "com.po.tmp.Test",
+            "projectName": "po-java",
+        
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - TestApp",
+            "request": "launch",
+            "mainClass": "com.po.TestApp",
+            "projectName": "po-java"
+        }
+    ]
+}
